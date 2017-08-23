@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理</title>
+    <script src="js/jquery/dist/jquery.min.js"></script>
+
+</head>
+<body>
+
+<label><input type="radio" name="question" value="1">第一题</label>
+<label><input type="radio" name="question" value="2">第二题</label>
+<label><input type="radio" name="question" value="3">第三题</label>
+<button id="onAll">全部开启</button>
+<button id="offAll">全部关闭</button>
+
+<script>
+$(function(){
+    $('input[type=radio]').change(function(){
+//        console.log($('input[type=radio]:checked').val())
+        $.ajax({
+            url:'/users/admin',
+            type:'get',
+            data:{no:$('input[type=radio]:checked').val()},
+            success:function (data) {
+
+            },
+            error:function (data) {
+            }
+        })
+
+    })
+//    全部开启
+    $('#onAll').click(function(){
+        $.ajax({
+            url:'/users/admin_onAll?on_off=0',
+            type:'get',
+            success:function (data) {
+                if(!data.disabledStatus)
+                    alert('全部题目都已经启用');
+            },
+            error:function (data) {
+
+            }
+        })
+    });
+    //    全部关闭
+    $('#offAll').click(function(){
+        $.ajax({
+            url:'/users/admin_onAll?on_off=1',
+            type:'get',
+            success:function (data) {
+                if(data.disabledStatus)
+                    alert('全部题目都已经禁用');
+            },
+            error:function (data) {
+//                console.log(data);
+            }
+        })
+    });
+
+
+})
+</script>
+</body>
+</html>

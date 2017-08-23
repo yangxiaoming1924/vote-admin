@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>投票页面</title>
+    <meta name="viewport" content="width=device-width">
+    <script src="js/jquery/dist/jquery.min.js"></script>
+
+</head>
+<body>
+<h1><span class="question"></span></h1>
+<div><label><input type="radio" value="answera" name="checkoption"><span class="answer1"></span></label></div>
+<div><label><input type="radio" value="answerb" name="checkoption"><span class="answer2"></span></label></div>
+<div><label><input type="radio" value="answerc" name="checkoption"><span class="answer3"></span></label></div>
+<div><label><input type="radio" value="answerd" name="checkoption"><span class="answer4"></span></label></div>
+
+<button id="submit">提交</button>
+<button id="next">下一道题</button>
+<script>
+    $(function () {
+       var  count=0;
+        var quest=[
+            ['A:麦当劳McDonald\'s','B:肯德基KFC','C:必胜客Pizza Hut','D:棒约翰Papa Jones','第1题： 请问您在过去3个月中通过电话或网络的方式订购过以下哪些西式快餐的外卖呢？'],
+            ['A:午餐','B:下午茶','C:晚餐','D:夜宵','第2题：您刚刚提到您订购过XXX的外卖，请问您是在什么时段点餐的呢？'],
+            ['A:自己1人','B:2人','C:3人','D:4-5人','第3题：请问您当时定了几人份的外卖呢？']
+        ];
+        $('.answer1').text(quest[count][0]);
+        $('.answer2').text(quest[count][1]);
+        $('.answer3').text(quest[count][2]);
+        $('.answer4').text(quest[count][3]);
+        $('.question').text(quest[count][4]);
+$('#submit').click(function () {
+    if(!$('input[type=radio]:checked').val())
+        alert(`请选择第${count+1}题的答案`);
+    else{
+            if(localStorage.getItem('questionStatus')==(count+1))
+                alert('您已经提交了答案,请勿重复提交');
+            else{
+                if(count>2)
+                    alert('全部答完了');
+                else{
+                    $.ajax({
+                        url:'/users',
+                        type:'get',
+                        data:{selectedAnswer: $('input[type=radio]:checked').val(),selectedNo:count+1},
+                        success:function (data) {
+                            if(data.disabledStatus){
+                                alert(`暂未开启第${count+1}题`);
+                                return;
+                            }else{
+                                alert(`第${count+1}题投票成功`);
+                                localStorage.setItem('questionStatus',count+1);
+                            }
+                        }
+                    });
+                }
+            }
+    }
+});
+$('#next').click(function(){
+    if(count>=2){
+        alert('全部答完了');
+    }else{
+        $.ajax({
+            url:'/users/next',
+            type:'get',
+            data:{selectedNo:count+2},
+            success:function (data) {
+                if(data.disabledStatus){
+                    alert(`暂未开启第${count+2}题`);
+                    return;
+                }else{
+                    count++;
+                    $('.answer1').text(quest[count][0]);
+                    $('.answer2').text(quest[count][1]);
+                    $('.answer3').text(quest[count][2]);
+                    $('.answer4').text(quest[count][3]);
+                    $('.question').text(quest[count][4]);
+
+
+                }
+
+            }
+        })
+    }
+
+})
+    })
+</script>
+</body>
+</html>

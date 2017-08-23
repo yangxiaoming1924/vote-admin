@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery/dist/jquery.min.js"></script>
+    <style>
+        body{
+            margin:0;
+            height: 100vh;
+            width:100vw;
+            overflow: hidden;
+        }
+        .show{
+            width:100vw;
+            height:70vh;
+            overflow: hidden;
+            position: relative;
+            border-left:1px solid #333;
+            border-bottom:1px solid #333;
+            left:2vw;
+        }
+        .contant{
+            width:100vw;
+            height:15vh;
+            overflow: hidden;
+            position: relative;
+            left:2vw;
+        }
+        .ans{
+            display: flex;
+            width: 100vw;
+            justify-content: space-around;
+        }
+        .ans li{
+          list-style: none;
+        }
+        .zhu{
+            position: absolute;
+            width:100px;
+            height:100vh;
+            top:68vh;
+            border:1px solid #333;
+            transition: all 2s;
+        }
+        .zhu span{
+            background: #FFF;
+        }
+        .zhu1{
+            left:10vw;
+            background: cyan;
+        }
+        .zhu2{
+            left:35vw;
+            background: #333;
+        }
+        .zhu3{
+            left:60vw;
+            background: yellow;
+        }
+        .zhu4{
+            left:85vw;
+            background: red;
+        }
+        .zhu5{
+            left:42vw;
+            background: #156;
+        }
+        .zhu6{
+            left:52vw;
+            background: #567;
+        }
+        .zhu7{
+            left:62vw;
+            background: orange;
+        }
+        .zhu8{
+            left:72vw;
+            background: olivedrab;
+        }
+        .zhu9{
+            left:82vw;
+            background: orchid;
+        }
+        .tit{
+            position: absolute;
+            width:100px;
+            height:10vh;
+            line-height:10vh;
+            top:3vh;
+            border:1px solid #333;
+            transition: all 2s;
+            text-align: center;
+            font-family: "黑体";
+            font-size: 30px;
+        }
+
+        .tit1{
+            left:10vw;
+            /*background: cyan;*/
+        }
+        .tit2{
+            left:35vw;
+            /*background: #333;*/
+        }
+        .tit3{
+            left:60vw;
+            /*background: yellow;*/
+        }
+        .tit4{
+            left:85vw;
+            /*background: red;*/
+        }
+        .tit5{
+            left:46vw;
+            background: #156;
+        }
+        .tit6{
+            left:52vw;
+            background: #567;
+        }
+        .tit7{
+            left:62vw;
+            background: orange;
+        }
+        .tit8{
+            left:72vw;
+            background: olivedrab;
+        }
+        .tit9{
+            left:82vw;
+            background: orchid;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+    <h1 class="quest">第1题： 请问您在过去3个月中通过电话或网络的方式订购过以下哪些西式快餐的外卖呢？</h1>
+    <ul class="ans">
+        <li>A:麦当劳McDonald</li>
+        <li>B:肯德基KFC</li>
+        <li>C:必胜客Pizza Hut</li>
+        <li>D:棒约翰Papa Jones</li>
+    </ul>
+</div>
+<div class="show">
+    <div class="zhu zhu1"><span></span></div>
+    <div class="zhu zhu2"><span></span></div>
+    <div class="zhu zhu3"><span></span></div>
+    <div class="zhu zhu4"><span></span></div>
+</div>
+<div class="contant">
+    <div class="tit tit1"><span>A</span></div>
+    <div class="tit tit2"><span>B</span></div>
+    <div class="tit tit3"><span>C</span></div>
+    <div class="tit tit4"><span>D</span></div>
+
+</div>
+
+<script>
+    console.warn(`
+    !!使用必读!!
+    q获取第一题数据
+    空格开始动画展示结果
+    w进入下一题并拉去数据
+    e进入上一题并拉去数据
+    `);
+    var top1=68;
+    var cunt=0;
+    localStorage.setItem('main',0);
+    var ani='';
+    var quest=[
+        ['A:麦当劳McDonald\'s','B:肯德基KFC','C:必胜客Pizza Hut','D:棒约翰Papa Jones','第1题： 请问您在过去3个月中通过电话或网络的方式订购过以下哪些西式快餐的外卖呢？'],
+        ['A:午餐','B:下午茶','C:晚餐','D:夜宵','第2题：您刚刚提到您订购过XXX的外卖，请问您是在什么时段点餐的呢？'],
+        ['A:自己1人','B:2人','C:3人','D:4-5人','第3题：请问您当时定了几人份的外卖呢？']
+    ];
+    function qingqiu() {
+        $.ajax({
+            url:'/users/toupiao',
+            type:'get',
+            success:function (data) {
+                ani=data.data[cunt];
+//                console.log(ani);
+            }
+        });
+    }
+    $(document).keypress(function (event) {
+        console.log(event);
+        console.log(event.keyCode);
+        console.log(cunt);
+        switch (event.keyCode){
+            case 113:
+                //请求第一题结果，
+                qingqiu();
+                break;
+            case 32:
+                //执行已请求的到的数据动画
+                $('.zhu1').css('top',68-ani.answera/10*70+'vh');
+                $('.zhu2').css('top',68-ani.answerb/10*70+'vh');
+                $('.zhu3').css('top',68-ani.answerc/10*70+'vh');
+                $('.zhu4').css('top',68-ani.answerd/10*70+'vh');
+                $('.zhu1 span').html('票数:'+ani.answera+'票');
+                $('.zhu2 span').html('票数:'+ani.answerb+'票');
+                $('.zhu3 span').html('票数:'+ani.answerc+'票');
+                $('.zhu4 span').html('票数:'+ani.answerd+'票');
+                break;
+            case 119:
+                //初始化
+                $('.zhu1').css('top','68vh');
+                $('.zhu2').css('top','68vh');
+                $('.zhu3').css('top','68vh');
+                $('.zhu4').css('top','68vh');
+                //进去下一题，并更新动画数据等待执行
+                cunt++;
+                qingqiu();
+                $('.quest').eq(0).html(quest[cunt][4]);
+                $('.ans li').eq(0).html(quest[cunt][0]);
+                   $('.ans li').eq(1).html(quest[cunt][1]);
+                   $('.ans li').eq(2).html(quest[cunt][2]);
+                   $('.ans li').eq(3).html(quest[cunt][3]);
+                break;
+            case 101:
+                //初始化
+                $('.zhu1').css('top','68vh');
+                $('.zhu2').css('top','68vh');
+                $('.zhu3').css('top','68vh');
+                $('.zhu4').css('top','68vh');
+                //进去下一题，并更新动画数据等待执行
+                cunt--;
+                qingqiu();
+                $('.quest').eq(0).html(quest[cunt][4]);
+                $('.ans li')
+                    .eq(0).html(quest[cunt][0]);
+                    $('.ans li').eq(1).html(quest[cunt][1]);
+                    $('.ans li').eq(2).html(quest[cunt][2]);
+                    $('.ans li').eq(3).html(quest[cunt][3]);
+                break;
+        }
+    })
+</script>
+</body>
+</html>
